@@ -1,0 +1,53 @@
+.brdMain{
+	width:100%;
+	height: 100%;
+	margin:0px;
+	padding: 0px;
+}
+
+#brdBackText{
+	color: var(--linkColor);
+	font-size:1.25rem;
+	font-weight: bold;
+	transition: color 0.5s;
+}
+
+#brdBackText:hover{
+	color: var(--linkColorHover);
+}
+
+#brdTitle{
+	font-weight: bold;
+	font-size:2rem;
+}
+
+.brdTaskbar{
+	width:100%;
+	height:10%;
+	background: var(--boardTaskbarBackground);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.brdTaskbarItem{
+	width:30%;
+	height:90%;
+	background: var(--boardTaskbarItemBackground);
+	border-radius: 3px;
+	margin:0.5%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.brdCardHolder{
+	width:100%;
+	height: 90%;
+	background: var(--boardHolderBackground);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	overflow: auto;
+}

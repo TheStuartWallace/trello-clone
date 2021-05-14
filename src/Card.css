@@ -1,0 +1,10 @@
+.cardMain{
+	min-width:20%;
+	min-height:20%;
+	margin:1%;
+	background: var(--cardBackground);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 5px 5px 10px var(--cardShadow);
+}
