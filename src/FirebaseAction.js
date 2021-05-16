@@ -1,13 +1,9 @@
 import firebase from './Firebase';
 
 class FirebaseAction{
-	static async getBoardList(id){
-		let data = await Firebase.firestore().collection(id).collection("boards").get();
+	static async getBoard(uid,id){
+		let data = await firebase.firestore().collection(uid).doc(id).get();
 		return data.data();
-	}
-
-	static async getBoard(id){
-
 	}
 }
 

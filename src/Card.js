@@ -6,17 +6,18 @@ class Card extends React.Component{
 		super(props);
 
 		this.state = {
-			title : this.props.data.title,
+			data : this.props.data.data,
+			type : this.props.data.type,
 		};
 
 	}
 
 	render(){
-		return (
-			<div className="cardMain">
-				<span className="cardTitle">{this.state.title}</span>
-			</div>
-		);
+		switch(this.state.type){
+			case "text": return (<div className="cardMain"><span className="cardText">{this.state.data}</span></div>);
+			case "image": return (<div className="cardMain"><img className="cardImage" src={this.state.data}/></div>);
+			default: return (<div className="cardMain"><span className="cardText">Unknown card type '{this.state.type}'</span></div>);
+		}
 	}
 }
 

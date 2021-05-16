@@ -1,6 +1,7 @@
 import React from 'react';
 import './Board.css';
 import Card from './Card';
+import FirebaseAction from './FirebaseAction';
 
 class Board extends React.Component{
 	constructor(props){
@@ -8,10 +9,24 @@ class Board extends React.Component{
 
 		this.state = {
 			title : "Untitled Board",
-			cards : [{title : "Test Card One"},{title : "Test Card Two"}],
+			cards : [],
 		};
 
 		window.document.title = this.state.title;
+		this.getCard();
+	}
+
+	getCard(){
+		let boardData = FirebaseAction.getBoard("9YXttQuaUWRCdJNbgwiuJXA7Mj63","guW7VBpwshrebtug5AE6");
+		boardData.then(data=>{
+
+			data.cards.forEach((cData)=>{
+				let array = this.state.cards;
+				console.log(JSON.parse(JSON.parse(cData)));
+				array.push(JSON.parse(JSON.parse(cData)));
+				this.setState({cards : array});
+			});
+		});
 	}
 
 	render(){
@@ -33,8 +48,8 @@ class Board extends React.Component{
 
 				<div className="brdCardHolder">
 					{
-						this.state.cards.map((data,index)=>{
-							return <Card data={data} />
+						this.state.cards.map((data,i)=>{
+							return <Card key={i} data={data} />
 						})
 					}
 				</div>
