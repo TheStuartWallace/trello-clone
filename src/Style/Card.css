@@ -1,10 +1,24 @@
+.cardTitle{
+	font-weight: bold;
+}
+
 .cardMain{
 	min-width:20%;
-	min-height:20%;
+	height:10%;
 	margin:1%;
 	background: var(--cardBackground);
 	display: flex;
 	justify-content: center;
+	flex-direction: column;
 	align-items: center;
 	box-shadow: 5px 5px 10px var(--cardShadow);
+}
+
+.cardAttachment{
+	font-size:0.8rem;
+}
+
+.cardAttachment:hover{
+	cursor: pointer;
+	text-decoration: underline;
 }
