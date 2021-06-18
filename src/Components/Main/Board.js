@@ -1,31 +1,41 @@
 import React from 'react';
 import 'Style/Board.css';
 import Card from 'Components/Main/Card';
-import FirebaseAction from 'Firebase/FirebaseAction';
+import FirebaseAction from 'Database/FirebaseAction';
+import {AuthContext} from 'Components/Auth/AuthProvider';
 
 class Board extends React.Component{
+	static contextType = AuthContext;
+
 	constructor(props){
 		super(props);
 
 		this.state = {
+			id : this.props.match.params.id,
 			title : "Loading",
 			cards : [],
+			status : 0,
 			error : false,
 		};
-		this.getCard();
+	}
+
+
+	componentDidUpdate(){
+		if(this.context && this.state.status === 0){
+			this.setState({status : 1});
+			this.getCard();
+		}
 	}
 
 	getCard(){
-		let boardData = FirebaseAction.getBoard(FirebaseAction.getUID(),this.props.match.params.id);
+		let boardData = FirebaseAction.getBoard(this.context.currentUser.uid,this.props.match.params.id);
 		boardData.then(data=>{
 			
 			let info = JSON.parse(data.info);
-			this.setState({title : info.title},()=>window.document.title = (this.state.title + " - Trello Clone"));
+			this.setState({title : info.title},()=>window.document.title = (this.state.title + " | Trello Clone"));
 
 			data.cards.forEach((cData)=>{
-				let oldCards = this.state.cards;
-				oldCards.push(JSON.parse(JSON.parse(cData)));
-				this.setState({cards : oldCards});
+				this.setState({cards : this.state.cards.concat(JSON.parse(cData))});
 			});
 		}).catch(error=>{
 			this.setState({title: "Error loading board", error: error});
@@ -43,6 +53,11 @@ class Board extends React.Component{
 				</div>
 			</div>
 		);
+	}
+
+	updateFirebase(index,data){
+		this.setState({cards : Object.assign([],this.state.cards,{[index] : data})});
+		FirebaseAction.updateAttachment(this.context.currentUser.uid,this.state.id,this.state.cards);
 	}
 
 	render(){
@@ -65,7 +80,7 @@ class Board extends React.Component{
 				<div className="brdCardHolder">
 					{
 						this.state.cards.map((data,i)=>{
-							return <Card key={i} data={data}/>
+							return <Card key={i} index={i} data={data} callback={(e)=>this.updateFirebase(i,e)}/>
 						})
 					}
 				</div>

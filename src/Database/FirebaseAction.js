@@ -1,4 +1,4 @@
-import firebase from './Firebase';
+import firebase from 'Database/Firebase';
 import { v4 as uuidv4 } from "uuid";
 
 class FirebaseAction{
@@ -18,8 +18,14 @@ class FirebaseAction{
 	}
 
 	static async updateAttachment(uid,id,card){
+		let cardsData = [];
+
+		card.map((data)=>{
+			cardsData = cardsData.concat(JSON.stringify(data));
+		})
+
 		firebase.firestore().collection(uid).doc(id).update({
-			cards : card,
+			cards : cardsData,
 		})
 	}
 
@@ -30,11 +36,6 @@ class FirebaseAction{
 		}catch(error){
 			return error;
 		}
-	}
-
-	static getUID(){
-		console.log(firebase.auth().currentUser);
-		return "firebase.auth().currentuser.uid;"
 	}
 }
 

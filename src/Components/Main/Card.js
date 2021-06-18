@@ -102,15 +102,18 @@ class Card extends React.Component{
 	addAttachment(data){
 		let attachment = this.state.attachment;
 		attachment.push(data);
-		this.setState({attachment : attachment, showAttachment : false});
-		// FirebaseAction.updateAttachment()
+		this.setState({attachment : attachment, showAttachment : false},()=>{
+			this.props.callback(this.props.index,{title : this.state.title, attachment: this.state.cards});	
+		});
 	}
 
 	removeAttachment(index){
 		if(window.confirm("Remove attachment? (This cannot be undone)")){
 			let state = this.state.attachment;
 			state.splice(index,1);
-			this.setState({attachment : state});
+			this.setState({attachment : state},()=>{
+				this.props.callback(this.props.index,{title : this.state.title, attachment: this.state.cards});
+			});
 		}
 	}
 

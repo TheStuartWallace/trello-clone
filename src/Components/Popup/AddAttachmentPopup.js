@@ -1,5 +1,5 @@
 import React from 'react';
-import FirebaseAction from 'Firebase/FirebaseAction';
+import FirebaseAction from 'Database/FirebaseAction';
 
 class AddAttachmentPopup extends React.Component{
 
