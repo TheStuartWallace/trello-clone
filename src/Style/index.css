@@ -8,7 +8,25 @@
 	--boardHolderBackground:#d6d6d6;
 
 	--cardBackground: #9c9c9c;
-	--cardShadow: #0a0a0a;
+	--cardShadow: #000000;
+
+	--backgroundSignIn: #2b2b2b;
+	--backgroundSignInInput: #dbdbdb;
+
+	--backgroundProfileLeft:  #3b3b3b;
+	--backgroundProfileRight: #bababa;
+
+	--backgroundBoardCount: #bababa;
+	--backgroundSettingWrap: #a3a3a3;
+	--borderColorSettingWrap: #808080;
+
+	--backgroundRightPanelButton: #a3a3a3;
+	--backgroundRightPanelButtonHover:  #808080;
+}
+
+a{
+	text-decoration: none;
+	color: black;
 }
 
 html, body, #root{

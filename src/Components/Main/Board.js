@@ -1,6 +1,6 @@
 import React from 'react';
 import 'Style/Board.css';
-import Card from 'Components/Main/Card';
+import Column from 'Components/Main/Column';
 import FirebaseAction from 'Database/FirebaseAction';
 import {AuthContext} from 'Components/Auth/AuthProvider';
 
@@ -13,7 +13,8 @@ class Board extends React.Component{
 		this.state = {
 			id : this.props.match.params.id,
 			title : "Loading",
-			cards : [],
+			columns : [],
+			newColumnName :  "",
 			status : 0,
 			error : false,
 		};
@@ -32,12 +33,18 @@ class Board extends React.Component{
 		boardData.then(data=>{
 			
 			let info = JSON.parse(data.info);
-			this.setState({title : info.title},()=>window.document.title = (this.state.title + " | Trello Clone"));
-
-			data.cards.forEach((cData)=>{
-				this.setState({cards : this.state.cards.concat(JSON.parse(cData))});
+			this.setState({title : info.title, boardBackground : info.boardBackground, cardBackground : info.cardBackground},()=>window.document.title = (this.state.title + " | Trello Clone"));
+			let a = [];
+			Object.values(data.columns).map((columns,ind)=>{
+				a[ind] = [];
+				columns.map((cards,cind) =>{
+					a[ind][cind] = JSON.parse(cards);
+				});
 			});
+
+			this.setState({columns : a});
 		}).catch(error=>{
+			console.error(boardData);
 			this.setState({title: "Error loading board", error: error});
 		});
 	}
@@ -55,9 +62,29 @@ class Board extends React.Component{
 		);
 	}
 
-	updateFirebase(index,data){
-		this.setState({cards : Object.assign([],this.state.cards,{[index] : data})});
-		FirebaseAction.updateAttachment(this.context.currentUser.uid,this.state.id,this.state.cards);
+	renderAddColumn(){
+		if(!this.state.addColumn)	return <div></div>;
+
+		return (
+			<div id="pupBacking">
+				<div id="pupWindowSmall">
+					<span>Column Name</span>
+					<input type="text" value={this.state.newColumnName} onChange={(e)=>{this.setState({newColumnName : e.target.value})}} />
+					<button onClick={()=>{
+						let a = JSON.parse(JSON.stringify(this.state.columns)); 
+						a.push([{title : this.state.newColumnName}]); 
+						this.setState({columns : a, newColumnName : "", addColumn : false});
+						FirebaseAction.updateColumns(this.context.currentUser.uid,this.state.id,a);
+					}}>Add Column</button>
+				</div>
+			</div>
+		);
+	}
+
+	updateFirebase(i,data){
+		let columns = JSON.parse(JSON.stringify(this.state.columns));
+		columns = Object.assign([],columns,{[i]:[this.state.columns[i][0],...data]});
+		FirebaseAction.updateColumns(this.context.currentUser.uid,this.state.id,columns);
 	}
 
 	render(){
@@ -72,20 +99,21 @@ class Board extends React.Component{
 						<span id="brdTitle">{this.state.title}</span>
 					</div>
 
-					<div className="brdTaskbarItem">
-
+					<div className="brdTaskbarItem" onClick={()=>this.setState({addColumn : true})}>
+						Add Column
 					</div>
 				</div>
 
-				<div className="brdCardHolder">
+				<div className="brdCardHolder" style={{"background":this.state.boardBackground}}>
 					{
-						this.state.cards.map((data,i)=>{
-							return <Card key={i} index={i} data={data} callback={(e)=>this.updateFirebase(i,e)}/>
+						this.state.columns.map((data,i)=>{
+							return <Column index={i} key={i} data={data} background={this.state.cardBackground} callback={(a,e)=>this.updateFirebase(a,e)}/>
 						})
 					}
 				</div>
 
 				{this.renderError()}
+				{this.renderAddColumn()}
 			</div>
 		);
 	}

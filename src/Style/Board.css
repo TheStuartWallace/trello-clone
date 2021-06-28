@@ -46,7 +46,7 @@
 	height: 90%;
 	background: var(--boardHolderBackground);
 	display: flex;
-	justify-content: center;
+	justify-content: left;
 	align-items: center;
 	flex-wrap: wrap;
 	overflow: auto;

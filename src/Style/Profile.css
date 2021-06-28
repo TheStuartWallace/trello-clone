@@ -1,0 +1,174 @@
+.pflMain{
+	width: 100%;
+	height: 100%;
+	padding: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+}
+
+.pflLeft{
+	width: 30%;
+	height: 100%;
+	background: var(--backgroundProfileLeft	);
+}
+
+.pflRight{
+	width: 70%;
+	height: 100%;
+	background: var(--backgroundProfileRight);
+}
+
+.pflLeftTop{
+	width: 100%;
+	height: 40%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.pflPicture{
+	width: 256px;
+	height: 256px;
+	border-radius: 100%;
+	transition: border-radius 1s;
+}
+
+.pflPicture:hover{
+	border-radius: 10%;
+}
+
+.pflDisplayName{
+	font-size: 2rem;
+	font-weight: bolder;
+	color: white;
+}
+
+
+.pflLeftMid{
+	width: 100%;
+	height: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.pflLeftBoardCount{
+	width: 90%;		
+	height: 10%;
+	text-align: center;
+	font-weight: bolder;
+	background: var(--backgroundBoardCount);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 10px auto;
+	border-radius: 10px;
+}
+
+.pflMidBoardList{
+	width: 90%;
+	height: 80%;
+	text-align: center;
+}
+
+.pflMidBoardListItem{
+	width: 90%;
+	height: 10%;
+	background: grey;
+	margin: 0px auto;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	transition: background 1s;
+	font-weight: bold;
+}
+
+.pflMidBoardListItem:hover{
+	background: lightgrey;
+}
+
+.pflMidBoardListItemTitle{
+	font-size: 1.2rem;
+	font-weight: bolder;
+}
+
+.pflMidBoardListItemCount{
+	font-size: 0.8rem;
+	font-weight: lighter;
+}
+
+.pflLeftBot{
+	height: 10%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.pflLeftPortTop{
+	font-weight: bold;
+}
+
+.pflLeftPortBot{}
+
+.pflRight{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.pflRightPanel > div{
+	width: 90%;
+	height: 10%;
+	display:  flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	margin: 2px auto;
+	background: var(--backgroundSettingWrap);
+}
+
+.pflRightPanel{
+	width: 90%;
+	height: 90%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.pflRightPanel label{
+	height: 30%;
+	font-weight: bolder;
+} 
+
+.pflRightPanel input{
+	width: 50%;
+	height: 40%;
+} 
+
+.pflRightPanel hr{
+	width: 100%;
+	border-style: solid;
+	border-color: var(--borderColorSettingWrap);
+}
+
+.pflRightPanel button{
+	width: 90%;
+	height: 5%;
+	border: none;
+	margin: 2px;
+	font-weight: bolder;
+	background: var(--backgroundRightPanelButton);
+	transition: background 1s;
+}
+
+.pflRightPanel button:hover{
+	background: var(--backgroundRightPanelButtonHover);
+}

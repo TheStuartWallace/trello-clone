@@ -1,0 +1,10 @@
+.clmWrapper{
+	width: 20%;
+	text-align: center;
+	height: 80%;
+}
+
+.clmTitle{
+	font-weight: bolder;
+	font-size: 2rem;
+}

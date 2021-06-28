@@ -1,0 +1,68 @@
+.sinWrapper{
+	width:100%;
+	height: 100%;
+	margin:0px;
+	padding: 0px;
+	background: var(--backgroundSignIn);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.sinInput{
+	width: 30%;
+	height: 40%;
+	border-radius: 16px;
+	text-align: center;
+	background: var(--backgroundSignInInput);
+}
+
+.sinTitle{
+	height: 30%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.sinTitleBig{
+	font-size: 2rem;
+	font-weight: bolder;
+}
+
+.sinTitleSmall{
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+.sinInputElements{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	height: 70%;
+}
+
+.sinInputUsername, .sinInputPassword{
+	width: 90%;
+	height: 15%;
+	text-align: center;
+	font-size: 1.2rem;
+	line-height: 25%;
+	margin: 1% auto;
+}
+
+.sinInputSubmit{
+	width: 80%;
+	height: 10%;
+	border-radius: 10px;
+	outline: none;
+	border: none;
+	background: grey;
+	font-weight: bold;
+	transition: background 0.5s;
+}
+
+.sinInputSubmit:hover{
+	background: darkgrey;
+}

@@ -103,7 +103,7 @@ class Card extends React.Component{
 		let attachment = this.state.attachment;
 		attachment.push(data);
 		this.setState({attachment : attachment, showAttachment : false},()=>{
-			this.props.callback(this.props.index,{title : this.state.title, attachment: this.state.cards});	
+			this.props.callback(this.props.index,{title : this.state.title, attachment: attachment});	
 		});
 	}
 
@@ -112,14 +112,14 @@ class Card extends React.Component{
 			let state = this.state.attachment;
 			state.splice(index,1);
 			this.setState({attachment : state},()=>{
-				this.props.callback(this.props.index,{title : this.state.title, attachment: this.state.cards});
+				this.props.callback(this.props.index,{title : this.state.title, attachment: this.state.attachment});
 			});
 		}
 	}
 
 	render(){
 		return (
-			<div className="cardMain">
+			<div className="cardMain" style={{"background":this.props.background}}>
 				<span className="cardTitle">{this.state.title}</span>
 				{	
 					(this.state.attachment.length === 1 ? 
@@ -128,7 +128,7 @@ class Card extends React.Component{
 				}
 
 				{this.renderCardPopup()}
-				<AddAttachmentPopup type={this.state.showAttachmentType} show={this.state.showAttachment} callback={(e)=>this.addAttachment(e)}/>
+				<AddAttachmentPopup type={this.state.showAttachmentType} show={this.state.showAttachment} callback={(e)=>{this.addAttachment(e)}}/>
 			</div>
 		);
 	}

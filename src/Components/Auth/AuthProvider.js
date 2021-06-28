@@ -8,14 +8,14 @@ class AuthProvider extends React.Component{
 		super(props);
 
 		this.state = {
-			currentUser : undefined,
+			currentUser : null,
 		};
 	}
 
 	componentDidMount(){
 		firebase.auth().onAuthStateChanged(user =>{
-			this.setState({currentUser : user});
 			if(user === null) return;
+			this.setState({currentUser : user});
 		});
 	}
 

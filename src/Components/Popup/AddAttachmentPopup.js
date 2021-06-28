@@ -81,7 +81,10 @@ class AddAttachmentPopup extends React.Component{
 				);
 
 			case "checklist":
-				if(typeof(this.state.value) !== "object") this.setState({value : [{data:""}]});
+				if(typeof(this.state.value) !== "object"){
+					this.setState({value : [{data:""}]});
+					return;
+				}
 
 				return (
 					<div id="pupInnerWindow">
