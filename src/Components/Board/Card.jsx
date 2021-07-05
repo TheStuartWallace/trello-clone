@@ -2,19 +2,19 @@ import React from 'react';
 import 'Style/Card.css';
 import 'Style/PopUp.css';
 import AddAttachmentPopup from 'Components/Popup/AddAttachmentPopup';
+import ContentEditable from 'react-contenteditable';
 
 class Card extends React.Component{
 	constructor(props){
 		super(props);
 
 		this.state = {
-			title : this.props.data.title,
 			show : false,
 			showAttachment : false,
 			showAttachmentType : "",
-			attachment : this.props.data.attachment,	
 		};
 	}
+
 
 	renderAttachment(i,data){
 		switch(data.type){
@@ -29,7 +29,7 @@ class Card extends React.Component{
 						data.data.map((item,index)=>{
 							return (
 								<div>
-									<input type="checkbox" key={index} name={"check."+i+"."+index} id={"check_"+index} checked={this.state.attachment[i].data[index].checked} onChange={(e)=>this.updateCheckList(e)}/>
+									<input type="checkbox" key={index} name={"check."+i+"."+index} id={"check_"+index} checked={this.props.data.attachment[i].data[index].checked} onChange={(e)=>this.updateCheckList(e)}/>
 									<label htmlFor={"check_"+index}>{item.data}</label>
 								</div>
 							);
@@ -52,9 +52,9 @@ class Card extends React.Component{
 		let attachmentID = +event.target.name.split(".")[1];
 		let itemIndex = +event.target.name.split(".")[2];
 
-		let existing = this.state.attachment;
+		let existing = this.props.data.attachment;
 		existing[attachmentID].data[itemIndex].checked = event.target.checked;
-		this.setState({attachment : existing});
+		this.props.callback("card",this.props.index,{title : this.props.data.title, attachment: existing});
 	}
 
 	renderCardPopup(){
@@ -64,13 +64,16 @@ class Card extends React.Component{
 		<div id="pupBacking">
 			<div id="pupWindow">
 				<div id="pupTop">
-					<span id="pupTitle">{this.state.title}</span>
+					<ContentEditable 	id="pupTitle" 
+										onChange={(e)=>this.changeTitle(e.target.value)}
+										html={this.props.data.title}
+					/>
 					<span id="pupClose" onClick={(e)=>{this.setState({show:false})}}>x</span>
 				</div>
 
 				<div id="pupMid">
 					{
-						this.state.attachment.map((data,i)=>{
+						this.props.data.attachment.map((data,i)=>{
 							return (
 								<div key={i} className="pupAttachment">
 									<span className="pupAttachmentNumber">#{i+1}</span>
@@ -100,33 +103,56 @@ class Card extends React.Component{
 	}
 
 	addAttachment(data){
-		let attachment = this.state.attachment;
+		let attachment = this.props.data.attachment;
 		attachment.push(data);
-		this.setState({attachment : attachment, showAttachment : false},()=>{
-			this.props.callback(this.props.index,{title : this.state.title, attachment: attachment});	
+		this.setState({showAttachment : false},()=>{
+			this.props.callback("card",this.props.index,{title : this.props.data.title, attachment: attachment});	
 		});
 	}
 
 	removeAttachment(index){
 		if(window.confirm("Remove attachment? (This cannot be undone)")){
-			let state = this.state.attachment;
+			let state = this.props.data.attachment;
 			state.splice(index,1);
-			this.setState({attachment : state},()=>{
-				this.props.callback(this.props.index,{title : this.state.title, attachment: this.state.attachment});
-			});
+			this.props.callback(this.props.index,{title : this.props.data.title, attachment: state});
+			
 		}
+	}
+
+	changeTitle(title){
+		let dat = title;
+		dat = dat.replaceAll("<div>","");
+		dat = dat.replaceAll("</div>","");
+		dat = dat.replaceAll("<br>","\n");
+
+		let returnData = {
+			title : dat,
+			attachment : this.props.data.attachment
+		};
+
+		this.props.callback("card",this.props.index,returnData);
 	}
 
 	render(){
 		return (
 			<div className="cardMain" style={{"background":this.props.background}}>
-				<span className="cardTitle">{this.state.title}</span>
-				{	
-					(this.state.attachment.length === 1 ? 
-						<span className="cardAttachment" onClick={(e)=>{this.setState({show : true})}}>Show {this.state.attachment?.length} attachment</span> : 
-						<span className="cardAttachment" onClick={(e)=>{this.setState({show : true})}}>Show {this.state.attachment?.length} attachments</span>)
-				}
+				<div className="clmRemove" onClick={()=>{if(window.confirm("Remove Card? This cannot be undone.")) this.props.callback("remove",this.props.index)}}>x</div>
+				<ContentEditable 	className="cardTitle" 
+									onChange={(e)=>this.changeTitle(e.target.value)}
+									html={this.props.data.title}
 
+				/>
+				{	
+					(this.props.data.attachment.length === 1 ? 
+						<span className="cardAttachment" onClick={(e)=>{this.setState({show : true})}}>Show {this.props.data.attachment?.length} attachment</span> : 
+						<span className="cardAttachment" onClick={(e)=>{this.setState({show : true})}}>Show {this.props.data.attachment?.length} attachments</span>)
+				}
+				<div className="cardNavigation">
+					<div className="up" onClick={(e)=>this.props.callback("move",this.props.index,"up")}> </div>
+					<div className="left" onClick={(e)=>this.props.callback("move",this.props.index,"left")}> </div>
+					<div className="right" onClick={(e)=>this.props.callback("move",this.props.index,"right")}> </div>
+					<div className="down" onClick={(e)=>this.props.callback("move",this.props.index,"down")}> </div>
+				</div>
 				{this.renderCardPopup()}
 				<AddAttachmentPopup type={this.state.showAttachmentType} show={this.state.showAttachment} callback={(e)=>{this.addAttachment(e)}}/>
 			</div>

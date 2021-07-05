@@ -3,7 +3,8 @@ import 'Style/Trello.css';
 
 import AuthProvider from "Components/Auth/AuthProvider";
 
-import Board from "Components/Main/Board";
+import MainPage from "Components/Main/MainPage";
+import Board from "Components/Board/Board";
 import SignIn from "Components/SignIn/SignIn";
 import Profile from "Components/Profile/Profile";
 
@@ -20,9 +21,11 @@ class Trello extends React.Component{
 		return (
 			<AuthProvider>
 				<Router>
+					<Route path="/" exact component={MainPage} />
 					<Route path="/b/:id" exact component={Board} />
 					<Route path="/u/:id" exact component={Profile} />
-					<Route path="/signin" exact component={SignIn} />
+					<Route path="/signin" exact render={(props) =><SignIn {...props} mode={true}/>} />
+					<Route path="/signup" exact render={(props) =><SignIn {...props} mode={false}/>} />
 				</Router>
 			</AuthProvider>
 		);	

@@ -1,5 +1,6 @@
 .cardTitle{
 	font-weight: bold;
+	width: 95%;
 }
 
 .cardMain{
@@ -7,6 +8,7 @@
 	height:10%;
 	margin:1%;
 	border-radius: 10px;
+	position: relative;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
@@ -26,4 +28,58 @@
 .cardAttachment:hover{
 	cursor: pointer;
 	text-decoration: underline;
+}
+
+.cardNavigation{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 5px;
+	left: 5px;
+}
+
+.cardNavigation div{
+	margin: 2px;
+	width: 0;
+    height: 0;
+}
+
+.cardNavigation .left{
+	border-top: 5px solid transparent;
+    border-right: 10px solid grey;
+    border-bottom: 5px solid transparent;
+}
+
+.cardNavigation .left:hover{
+	border-right: 10px solid darkgrey;	
+}
+
+.cardNavigation .right{
+	border-top: 5px solid transparent;
+    border-left: 10px solid grey;
+    border-bottom: 5px solid transparent;
+}
+.cardNavigation .right:hover{
+	border-left: 10px solid darkgray;
+}
+
+.cardNavigation .down{
+	border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid grey;
+}
+
+.cardNavigation .down:hover{
+    border-top: 10px solid darkgrey;
+}
+
+.cardNavigation .up{
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 10px solid grey;
+}
+
+.cardNavigation .up:hover{
+    border-bottom: 10px solid darkgrey;
 }

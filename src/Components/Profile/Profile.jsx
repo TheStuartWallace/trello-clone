@@ -3,6 +3,7 @@ import 'Style/Profile.css';
 import FirebaseAction from 'Database/FirebaseAction';
 import {AuthContext} from 'Components/Auth/AuthProvider';
 import {Link} from 'react-router-dom';
+import NewBoardPopup from 'Components/Popup/NewBoardPopup';
 
 
 export default class SignIn extends React.Component{
@@ -21,7 +22,6 @@ export default class SignIn extends React.Component{
 
 	componentDidUpdate(){
 		if(this.context.currentUser){
-
 			if(!this.state.profile){
 				FirebaseAction.getProfile(this.context.currentUser.uid).then((data)=>{
 					this.setState({profile : data, changedData : data});
@@ -34,11 +34,32 @@ export default class SignIn extends React.Component{
 				FirebaseAction.getAllBoard(this.context.currentUser.uid).then(data =>{
 					let boardData = [];
 
-					data.map(data =>{
-						if(data.id !== "data"){
-							return boardData.push({...data,cards : data.cards.map(data=>JSON.parse(data)),info : JSON.parse(data.info)});
+					data.map(board=>{
+						if(board.id === "data"){
+							this.setState({info : board});
+							return;
 						}
-					});
+
+						let columns = [];
+						columns[0] = {
+							id : board.id,
+							...JSON.parse(board.info)
+						};
+
+						Object.values(board.columns).map(cols =>{
+							let cards = [];
+
+							cols.map(card=>{
+								cards.push(JSON.parse(card));
+							});
+
+							columns.push(cards);
+							return;
+						});
+
+						boardData.push([...columns]);
+						return;
+					})
 
 					this.setState({boards : boardData});
 				});
@@ -66,7 +87,13 @@ export default class SignIn extends React.Component{
 		}else{
 			console.error("Unable to comply");
 		}
+	}
 
+	createNewBoard(data){
+		FirebaseAction.createNewBoard(this.context.currentUser.uid,data).then((data)=>{
+			window.open("/b/"+data.id,"_blank");
+			this.setState({renderNewBoard : false});
+		}).catch(console.error);
 	}
 
 	render(){
@@ -85,21 +112,25 @@ export default class SignIn extends React.Component{
 						</div>
 
 						<div className="pflLeftMid">
-							<div className="pflLeftBoardCount">You have {this.state.boards.length} {this.state.boards.length === 1 ? "board" : "board" }</div>
+							<div className="pflLeftBoardCount">You have {this.state.boards.length} {this.state.boards.length === 1 ? "board" : "boards" }</div>
 
 							<div className="pflMidBoardList">
 								{
 									this.state.boards.map((data,index)=>{
 										return (
-											<Link key={index} to={"/b/"+data.id} className="pflMidBoardListItem" target="_blank">
-												<span className="pflMidBoardListItemTitle">{data.info.title}</span>
+											<Link key={index} to={"/b/"+data[0].id} className="pflMidBoardListItem" target="_blank">
+												<span className="pflMidBoardListItemTitle">{data[0].title}</span>
 												<span className="pflMidBoardListItemCount">
-													Contains {data.cards.length} {data.cards.length === 1 ? "card" : "cards"}
+													Contains {data.length-1} {data.length === 1 ? "column" : "columns"}
 												</span>
 											</Link>
 										);
 									})
 								}
+
+								<div className="pflMidBoardListItem" onClick={()=>this.setState({renderNewBoard : true})}>
+									<span className="pflMidBoardListItemTitle">Create New Board</span>
+								</div>
 							</div>
 						</div>
 
@@ -112,44 +143,46 @@ export default class SignIn extends React.Component{
 					<div className="pflRight">
 						<div className="pflRightPanel">
 							<div>
-								<label for="display">Display Name</label>
+								<label htmlFor="display">Display Name</label>
 								<input type="text" id="display" name="display" value={this.state.changedData.display} onChange={(e)=>this.handleChange(e)}/>
 							</div>
 
 							<div>
-								<label for="picture">Profile Picture</label>
+								<label htmlFor="picture">Profile Picture</label>
 								<input type="file" id="picture" name="picture" value={this.state.profilePicture} onChange={(e)=>this.handleFile(e)}/>
 							</div>
 
 							<hr/>
 
 							<div>
-								<label for="setting3">Setting 3</label>
+								<label htmlFor="setting3">Setting 3</label>
 								<input type="text" id="setting3" name="setting3" value={this.state.changedData.boardColour} onChange={(e)=>this.handleChange(e)}/>
 							</div>
 
 							<hr/>
 
 							<div>
-								<label for="boardBackground">Default Board Colour</label>
+								<label htmlFor="boardBackground">Default Board Colour</label>
 								<input type="color" id="boardBackground" name="boardBackground" value={this.state.changedData.boardBackground} onChange={(e)=>this.handleChange(e)}/>
 							</div>
 
 							<div>
-								<label for="cardBackground">Default Card Colour</label>
+								<label htmlFor="cardBackground">Default Card Colour</label>
 								<input type="color" id="cardBackground" name="cardBackground" value={this.state.changedData.cardBackground} onChange={(e)=>this.handleChange(e)}/>
 							</div>
 
 							<hr/>
 
 							<div>
-								<label for="setting6">Setting 6</label>
+								<label htmlFor="setting6">Setting 6</label>
 								<input type="text" id="setting6" name="setting6" value={this.state.profilePicture} onChange={(e)=>this.handleChange(e)}/>
 							</div>
 
 							<button onClick={()=>this.saveChanges()}>Save Changes</button>
 						</div>
 					</div>
+
+					<NewBoardPopup 	open={this.state.renderNewBoard} close={()=>this.setState({renderNewBoard : false})} create={(dat)=>this.createNewBoard(dat)}/>
 				</div>
 			);
 

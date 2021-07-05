@@ -36,6 +36,10 @@ class AddAttachmentPopup extends React.Component{
 		};
 	}
 
+	static getDerivedStateFromProps(props, state){
+		return {...state,show : props.show, type : props.type};
+	}
+
 	handleInput(event){		
 		if(this.state.type === "image" || this.state.type === "file"){
 			if(this.state.not_allowed.includes(event.target.files[0].type)){
@@ -68,7 +72,7 @@ class AddAttachmentPopup extends React.Component{
 			case "image": 
 				return (
 					<div id="pupInnerWindow">
-						<input className="pupTextInput" type="file" accept="image/png" name="input" onChange={(e)=>this.handleInput(e)}/>
+						<input className="pupTextInput" type="file" accept="image" name="input" onChange={(e)=>this.handleInput(e)}/>
 					</div>
 				);
 
@@ -124,10 +128,6 @@ class AddAttachmentPopup extends React.Component{
 	addNewChecklistItem(){
 		let value = this.state.value.concat({data:"", checked:false});
 		this.setState({value : value});
-	}
-
-	componentWillReceiveProps(next){
-		this.setState({show : next.show, type : next.type});
 	}
 
 	submit(e){

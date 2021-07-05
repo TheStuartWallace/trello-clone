@@ -44,12 +44,9 @@ class FirebaseAction{
 	}
 
 	static async userSignIn(email, password){
-		try{
-			firebase.auth().signInWithEmailAndPassword(email,password);
-			return true;
-		}catch(error){
-			return error;
-		}
+		await firebase.auth().signInWithEmailAndPassword(email,password).then(data=>{
+			return data.user.uid;
+		}).catch(error=>{return error});
 	}
 
 	static async saveProfile(uid,profile){
@@ -69,6 +66,40 @@ class FirebaseAction{
 
 		let resp = await firebase.firestore().collection(uid).doc(id).update({columns : returnData}).then(dat2=>{return true}).catch((error)=>{return error;});
 		return resp;
+	}
+
+	static async createNewBoard(uid,data){
+		let board = {
+			info : JSON.stringify(data),
+			allowedUsers : [uid],
+			columns : {},
+		};
+
+		let fbaction = await firebase.firestore().collection(uid).add(board);
+		return fbaction;
+	}
+
+	static async updateBoardInfo(uid,id,data){
+		let resp = await firebase.firestore().collection(uid).doc(id).update({
+			info : JSON.stringify(data),
+		}).then((data=>{return true;}))
+		.catch(console.error);
+		return resp;
+	}
+
+	static async userSignUp(email,password){
+		await firebase.auth().createUserWithEmailAndPassword(email, password).then(data=>{
+			firebase.firestore().collection(data.user.uid).doc("data").set({
+				boardBackground : "#000000",
+				cardBackground : "#000000",
+				display : data.user.email,
+				profilePicture : "",
+			}).catch(console.error);
+
+			return data.user.uid;
+		}).catch((error)=>{
+			return error;
+		})
 	}
 }
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import 'Style/Board.css';
-import Column from 'Components/Main/Column';
+import Column from 'Components/Board/Column';
 import FirebaseAction from 'Database/FirebaseAction';
 import {AuthContext} from 'Components/Auth/AuthProvider';
+import ContentEditable from 'react-contenteditable'
 
 class Board extends React.Component{
 	static contextType = AuthContext;
@@ -20,7 +21,6 @@ class Board extends React.Component{
 		};
 	}
 
-
 	componentDidUpdate(){
 		if(this.context && this.state.status === 0){
 			this.setState({status : 1});
@@ -31,8 +31,13 @@ class Board extends React.Component{
 	getCard(){
 		let boardData = FirebaseAction.getBoard(this.context.currentUser.uid,this.props.match.params.id);
 		boardData.then(data=>{
-			
+
 			let info = JSON.parse(data.info);
+			if(data.allowedUsers.filter((element)=>{return element===this.context.currentUser.uid}) <= 0){
+				this.setState({error : {name:"Unauthorised",message:"You are not on the allowed users list for this board"}});
+				return;
+			}
+
 			this.setState({title : info.title, boardBackground : info.boardBackground, cardBackground : info.cardBackground},()=>window.document.title = (this.state.title + " | Trello Clone"));
 			let a = [];
 			Object.values(data.columns).map((columns,ind)=>{
@@ -68,6 +73,7 @@ class Board extends React.Component{
 		return (
 			<div id="pupBacking">
 				<div id="pupWindowSmall">
+					<div className="clmRemove" onClick={()=>{this.setState({addColumn : false})}}>x</div>
 					<span>Column Name</span>
 					<input type="text" value={this.state.newColumnName} onChange={(e)=>{this.setState({newColumnName : e.target.value})}} />
 					<button onClick={()=>{
@@ -81,11 +87,51 @@ class Board extends React.Component{
 		);
 	}
 
-	updateFirebase(i,data){
+	columnCallback(type,index,data){
 		let columns = JSON.parse(JSON.stringify(this.state.columns));
-		columns = Object.assign([],columns,{[i]:[this.state.columns[i][0],...data]});
-		FirebaseAction.updateColumns(this.context.currentUser.uid,this.state.id,columns);
+		
+		switch(type){
+			case "remove":
+				columns = columns.filter((element,a)=>{return a !== index});
+				this.setState({columns : columns});
+				FirebaseAction.updateColumns(this.context.currentUser.uid,this.state.id,columns);
+			break;
+
+			case "cards":
+				columns = Object.assign([],columns,{[index]:[this.state.columns[index][0],...data]});
+				this.setState({columns : columns});
+				FirebaseAction.updateColumns(this.context.currentUser.uid,this.state.id,columns);
+			break;
+
+			case "boardTitle":
+				let dat = data;
+				dat = dat.replaceAll("<div>","");
+				dat = dat.replaceAll("</div>","");
+				dat = dat.replaceAll("<br>","\n");
+				this.setState({title : dat},()=>{
+					FirebaseAction.updateBoardInfo(this.context.currentUser.uid,this.state.id,{title : this.state.title,cardBackground : this.state.cardBackground, boardBackground : this.state.boardBackground});
+				});
+			break;
+
+			case "move":
+				let columnID = parseInt(index.split(".")[1]);
+				let cardID = parseInt(index.split(".")[0]);
+				
+				let moveColumn = (data === "left" ? columnID-1 : columnID + 1);
+				if(moveColumn < 0) moveColumn = columns.length-1;
+				if(moveColumn >= columns.length) moveColumn = 0;
+
+				columns[moveColumn].push(columns[columnID].splice((cardID+1),1)[0]);
+				this.setState({columns : columns});
+				FirebaseAction.updateColumns(this.context.currentUser.uid,this.state.id,columns);
+				
+			break;
+
+			default: break;
+		}
 	}
+
+
 
 	render(){
 		return (
@@ -96,7 +142,10 @@ class Board extends React.Component{
 					</div>
 
 					<div className="brdTaskbarItem">
-						<span id="brdTitle">{this.state.title}</span>
+						<ContentEditable 	id="brdTitle" 
+											html={this.state.title}
+											onChange={(e)=>this.columnCallback("boardTitle",0,e.target.value)}
+											tagName="span"/>
 					</div>
 
 					<div className="brdTaskbarItem" onClick={()=>this.setState({addColumn : true})}>
@@ -107,7 +156,11 @@ class Board extends React.Component{
 				<div className="brdCardHolder" style={{"background":this.state.boardBackground}}>
 					{
 						this.state.columns.map((data,i)=>{
-							return <Column index={i} key={i} data={data} background={this.state.cardBackground} callback={(a,e)=>this.updateFirebase(a,e)}/>
+							return <Column  index={i} 
+											key={i} 
+											data={data} 
+											background={this.state.cardBackground} 
+											callback={(i,a,e)=>this.columnCallback(i,a,e)}/>
 						})
 					}
 				</div>
