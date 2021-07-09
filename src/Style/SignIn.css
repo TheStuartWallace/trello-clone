@@ -15,7 +15,7 @@
 }
 
 .sinInput{
-	width: 30%;
+	width: 70%;
 	height: 50%;
 }
 
@@ -75,5 +75,51 @@
 	.sinWrapper{
 		color: white;
 		background-image: url("https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/blackBackground.png?alt=media&token=86c6bdef-4e0b-45e1-a2e0-26152772eceb");
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	.sinInput{
+		width: 100%;
+		height: 90%;
+	}
+
+
+	.sinInput header h1{
+		font-size: 4rem;
+	}
+
+
+	.sinInput header h2{
+		font-size: 1.5rem;
+	}
+}
+
+
+@media only screen and (max-height: 450px) {
+	.sinInput{
+		height: 90%;
+	}
+
+	.sinInput header{
+		height: 20%;
+	}
+
+	.sinInput header h1{
+		font-size: 2rem;
+	}
+
+	.sinInput header h2{
+		font-size: 1rem;
+	}
+
+
+	.sinInput main{
+		height: 70%;
+	}
+
+
+	.sinInput footer{
+		height: 10%;
 	}
 }

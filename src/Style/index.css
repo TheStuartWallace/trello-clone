@@ -13,7 +13,7 @@
 	--backgroundSignIn: #2b2b2b;
 	--backgroundSignInInput: #dbdbdb;
 
-	--backgroundProfileLeft:  #3b3b3b;
+	--backgroundProfileLeft:  rgba(59, 59, 59,0.5);
 	--backgroundProfileRight: #bababa;
 
 	--backgroundBoardCount: #bababa;

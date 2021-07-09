@@ -32,7 +32,7 @@
 }
 
 #pupWindowSmall{
-	height: 20%;
+	height: 30%;
 }
 
 .pupTextInput{
@@ -193,4 +193,24 @@
 	height: 15%;
 	position: absolute;
 	bottom: 5px
+}
+
+
+@media only screen and (max-width: 800px) {
+
+	#pupWindow, #pupWindowSmall{
+		width: 90%;
+	}
+}
+
+@media only screen and (max-height: 550px){
+	#pupWindowSmall{
+		height: 50%;
+	}
+}
+
+@media only screen and (max-height: 350px){
+	#pupWindowSmall{
+		height: 90%;
+	}
 }

@@ -20,18 +20,40 @@ export default class SignIn extends React.Component{
 		window.document.title = "Loading...";
 	}
 
-	componentDidUpdate(){
-		if(this.context.currentUser){
-			if(!this.state.profile){
-				FirebaseAction.getProfile(this.context.currentUser.uid).then((data)=>{
-					this.setState({profile : data, changedData : data});
-					window.document.title = data.display+"'s Profile | Trello-Clone";
-				});
+	componentDidMount(){this.getData()}
+	componentDidUpdate(){this.getData()}
+
+	getData(){
+		if(this.state.status > 0) return; 
+
+		if(!this.state.profile){
+			FirebaseAction.getProfile(this.state.id).then((data)=>{
+				this.setState({profile : data, changedData : data, status : (data.private ? 2 : this.state.status )});
+			});
+		}
+
+		if(this.context && this.state.mode === undefined){
+			if(this.context.userSignedIn === false){
+				this.setState({mode : false});
+			}else if(this.context.userSignedIn === true && this.context.currentUser){
+				this.setState({mode : this.context.currentUser.uid === this.state.id});
 			}
+		}
 
 
-			if(!this.state.boards){
-				FirebaseAction.getAllBoard(this.context.currentUser.uid).then(data =>{
+		/*
+			Only get board details when:
+				Boards is not in state
+				User is signed in
+				User signed in is user in ID
+
+		*/
+		if(!this.state.boards && 
+			this.context.userSignedIn &&
+			this.context.currentUser.uid === this.state.id
+
+			){
+				FirebaseAction.getAllBoard(this.state.id).then(data =>{
 					let boardData = [];
 
 					data.map(board=>{
@@ -59,16 +81,14 @@ export default class SignIn extends React.Component{
 
 						boardData.push([...columns]);
 						return;
-					})
+					});
 
-					this.setState({boards : boardData});
-				});
-			}
-
-			if(this.state.profile && this.state.boards && this.state.status !== 1){
-				this.setState({status : 1});
-			}
+				this.setState({boards : boardData});
+			});
 		}
+
+		if(this.context.userSignedIn !== undefined && this.state.profile && this.state.mode === false) this.setState({status : 2}); // If user isn't signed in and the profile is loaded
+		if(this.context.userSignedIn === true  && this.state.profile && this.state.boards && this.state.mode) this.setState({status : 1}); // If the user is signed in, the profile is loaded and this isn't their account
 	}
 
 	handleChange(event){
@@ -78,15 +98,23 @@ export default class SignIn extends React.Component{
 	}
 
 	handleFile(event){
-		this.setState({profilePicture : event.target.files[0]});
+		this.setState({profilePictureName: event.target.value, profilePicture : event.target.files[0]});
 	}
 
 	saveChanges(){
-		if(FirebaseAction.saveProfile(this.context.currentUser.uid, this.state.changedData)){
-			this.setState({profile : this.state.changedData});
-		}else{
-			console.error("Unable to comply");
+		if(this.state.profilePictureName){
+			FirebaseAction.uploadProfilePicture(this.context.currentUser.uid,this.state.profilePicture).then(snapshot => snapshot.ref.getDownloadURL()).then((url)=>{
+				this.setState({changedData : {...this.state.changedData, profilePicture : url}});
+			}).catch(error=>{
+				this.setState({error : error});
+			});
 		}
+
+		FirebaseAction.saveProfile(this.context.currentUser.uid,this.state.changedData).then(profData=>{
+			this.setState({profile : this.state.changedData});
+		}).catch(error =>{
+			this.setState({error : error});
+		});
 	}
 
 	createNewBoard(data){
@@ -105,42 +133,37 @@ export default class SignIn extends React.Component{
 
 			case 1: return (
 				<div className="pflMain">
-					<div className="pflLeft">
-						<div className="pflLeftTop">
-							<img className="pflPicture" alt="" src={this.state.profile.profilePicture}/>
-							<span className="pflDisplayName">{this.state.profile.display}'s Profile</span>
-						</div>
+					<left>
+						<header>
+							<img alt="" src={this.state.profile.profilePicture}/>
+							<span>{this.state.profile.display}'s Profile</span>
+						</header>
 
-						<div className="pflLeftMid">
+						<main>
 							<div className="pflLeftBoardCount">You have {this.state.boards.length} {this.state.boards.length === 1 ? "board" : "boards" }</div>
-
 							<div className="pflMidBoardList">
 								{
 									this.state.boards.map((data,index)=>{
 										return (
-											<Link key={index} to={"/b/"+data[0].id} className="pflMidBoardListItem" target="_blank">
-												<span className="pflMidBoardListItemTitle">{data[0].title}</span>
-												<span className="pflMidBoardListItemCount">
-													Contains {data.length-1} {data.length === 1 ? "column" : "columns"}
-												</span>
+											<Link key={index} to={"/b/"+data[0].id} target="_blank">
+												<h1>{data[0].title}</h1>
+												<h2>Contains {data.length-1} {data.length === 1 ? "column" : "columns"}</h2>
 											</Link>
 										);
 									})
 								}
 
-								<div className="pflMidBoardListItem" onClick={()=>this.setState({renderNewBoard : true})}>
-									<span className="pflMidBoardListItemTitle">Create New Board</span>
-								</div>
+								<a onClick={()=>this.setState({renderNewBoard : true})}><h1>Create New Board</h1></a>
 							</div>
-						</div>
+						</main>
 
-						<div className="pflLeftBot">
-							<div className="pflLeftPortTop">Stuart Wallace Portfolio 2021</div>
-							<div className="pflLeftPortBot">Trello Clone 2021</div>
-						</div>
-					</div>
+						<footer>
+							<h1>Stuart Wallace Portfolio 2021</h1>
+							<h2>Trello Clone 2021</h2>
+						</footer>
+					</left>
 
-					<div className="pflRight">
+					<right>
 						<div className="pflRightPanel">
 							<div>
 								<label htmlFor="display">Display Name</label>
@@ -149,14 +172,14 @@ export default class SignIn extends React.Component{
 
 							<div>
 								<label htmlFor="picture">Profile Picture</label>
-								<input type="file" id="picture" name="picture" value={this.state.profilePicture} onChange={(e)=>this.handleFile(e)}/>
+								<input type="file" id="picture" name="picture" value={this.state.profilePictureName} onChange={(e)=>this.handleFile(e)}/>
 							</div>
 
 							<hr/>
 
 							<div>
 								<label htmlFor="setting3">Setting 3</label>
-								<input type="text" id="setting3" name="setting3" value={this.state.changedData.boardColour} onChange={(e)=>this.handleChange(e)}/>
+								<input type="text" id="setting3" name="setting3" value="" onChange={(e)=>this.handleChange(e)}/>
 							</div>
 
 							<hr/>
@@ -175,17 +198,40 @@ export default class SignIn extends React.Component{
 
 							<div>
 								<label htmlFor="setting6">Setting 6</label>
-								<input type="text" id="setting6" name="setting6" value={this.state.profilePicture} onChange={(e)=>this.handleChange(e)}/>
+								<input type="text" id="setting6" name="setting6" value="" onChange={(e)=>this.handleChange(e)}/>
 							</div>
 
 							<button onClick={()=>this.saveChanges()}>Save Changes</button>
 						</div>
-					</div>
+					</right>
 
 					<NewBoardPopup 	open={this.state.renderNewBoard} close={()=>this.setState({renderNewBoard : false})} create={(dat)=>this.createNewBoard(dat)}/>
 				</div>
 			);
 
+			case 2:	return (
+				<div className="pflMain">
+					<middle>
+						<header>
+							<img alt="" src={this.state.profile.profilePicture}/>
+							<span>{this.state.profile.display}'s Profile</span>
+						</header>
+						<main>
+							{(this.state.profile.private ? 
+								<div>This users profile is private</div>
+								:
+								<div>
+									<div className="pflLeftBoardCount">This user has {this.state.profile.boards} {this.state.profile.boards === 1 ? "board" : "boards" }</div>
+								</div>
+							)}
+						</main>
+						<footer>
+							<h1>Stuart Wallace Portfolio 2021</h1>
+							<h2>Trello Clone 2021</h2>
+						</footer>
+					</middle>
+				</div>			
+			);
 		}
 	}
 }

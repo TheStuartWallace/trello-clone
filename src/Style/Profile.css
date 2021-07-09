@@ -6,21 +6,37 @@
 	justify-content: center;
 	align-items: center;
 	flex-direction: row;
+	background-image: url("https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/whiteBackground.png?alt=media&token=a23b38cd-ee20-4b4e-86d8-2b84aff67fc4");
+	
 }
 
-.pflLeft{
+.pflMain left{
 	width: 30%;
 	height: 100%;
 	background: var(--backgroundProfileLeft	);
+	overflow: hidden;
 }
 
-.pflRight{
+.pflMain middle{
+	width: 50%;
+	height: 100%;
+	background: var(--backgroundProfileLeft	);
+	overflow: hidden;
+	margin: 0px auto;
+}
+
+.pflMain right{
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
 	width: 70%;
 	height: 100%;
-	background: var(--backgroundProfileRight);
 }
 
-.pflLeftTop{
+.pflMain left header, .pflMain middle header{
 	width: 100%;
 	height: 40%;
 	display: flex;
@@ -29,25 +45,26 @@
 	flex-direction: column;
 }
 
-.pflPicture{
+.pflMain left header img, .pflMain middle header img{
 	width: 256px;
 	height: 256px;
 	border-radius: 100%;
 	transition: border-radius 1s;
 }
 
-.pflPicture:hover{
+.pflMain left header img:hover, .pflMain middle header img:hover{
 	border-radius: 10%;
 }
 
-.pflDisplayName{
+.pflMain left header span, .pflMain middle header span{
+	text-align: center;
 	font-size: 2rem;
 	font-weight: bolder;
 	color: white;
 }
 
 
-.pflLeftMid{
+.pflMain left main, .pflMain middle main{
 	width: 100%;
 	height: 50%;
 	display: flex;
@@ -75,9 +92,9 @@
 	text-align: center;
 }
 
-.pflMidBoardListItem{
+.pflMidBoardList a{
 	width: 90%;
-	height: 10%;
+	height: 15%;
 	background: grey;
 	margin: 4px auto;
 	border-radius: 10px;
@@ -89,33 +106,45 @@
 	font-weight: bold;
 }
 
-.pflMidBoardListItem:hover{
+.pflMidBoardList a:hover{
 	background: lightgrey;
 }
 
-.pflMidBoardListItemTitle{
+.pflMidBoardList a h1{
 	font-size: 1.2rem;
 	font-weight: bolder;
+	padding: 0px;
+	margin: 0px;
 }
 
-.pflMidBoardListItemCount{
+.pflMidBoardList a h2{
 	font-size: 0.8rem;
 	font-weight: lighter;
+	padding: 0px;
+	margin: 0px;
 }
 
-.pflLeftBot{
+.pflMain left footer, .pflMain middle footer{
 	height: 10%;
+	text-align: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 }
 
-.pflLeftPortTop{
+.pflMain left footer h1, .pflMain middle footer h1{
 	font-weight: bold;
+	font-size: 1.2rem;
+	padding: 0px;
+	margin: 0px;
 }
 
-.pflLeftPortBot{}
+.pflMain left footer h2, .pflMain middle footer h2{
+	font-size: 1rem;
+	padding: 0px;
+	margin: 0px;
+}
 
 .pflRight{
 	display: flex;
@@ -171,4 +200,153 @@
 
 .pflRightPanel button:hover{
 	background: var(--backgroundRightPanelButtonHover);
+}
+
+@media (prefers-color-scheme: dark) {
+	.pflMain{
+		background-image: url("https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/blackBackground.png?alt=media&token=86c6bdef-4e0b-45e1-a2e0-26152772eceb");
+	}
+}
+
+@media only screen and (max-width: 800px){
+	.pflMain left header img, .pflMain middle header img{
+		width: 128px;
+		height: 128px;
+	}
+
+
+	.pflMain left header span, .pflMain middle header span{
+		font-size: 1rem;
+	}
+
+
+	.pflMain left footer h1, .pflMain middle footer h1{
+		font-size: 1rem;
+	}
+
+	.pflMain{
+		height: auto;
+		flex-direction: column;
+	}
+
+	.pflMain left, .pflMain middle{
+		width: 100%;
+		height: 90vh;
+		float: bottom;
+	}
+
+	.pflMain right{
+	 	width: 100%;
+	 	justify-content: flex-start;
+	 	height: 70vh;
+	 }
+
+	 .pflRightPanel{
+	 	width: 100%;
+	 	height: 100%;
+	 	text-align: center;
+		display: block;
+		overflow: scroll;
+	 }
+
+
+	 .pflRightPanel > div{
+	 	height: 15%;
+	 }
+
+
+	 .pflRightPanel input{
+	 	width: 80%;
+	 }
+}
+
+
+@media only screen and (max-height: 750px){
+	.pflMain left header img{
+		width: 128px;
+		height: 128px;
+	}
+
+	.pflRightPanel{
+		overflow: scroll;
+		display: block;
+		height: 100%;
+	}
+
+
+	.pflRightPanel > div{
+		height: 15%;
+	}
+}
+
+
+@media only screen and (max-height: 400px){
+	.pflMain left header{
+		height: 10%;
+	}
+
+	.pflMain left main{
+		height: 80%;
+	}
+
+	.pflMain left footer{
+		height: 10%;
+	}
+	.pflMain left header img{
+		display: none;
+	}
+	
+	.pflLeftBoardCount, .pflMidBoardList a{
+		height: 30%;
+	}
+
+	.pflRightPanel button{
+		height: 20%;
+		margin: 0px auto;
+	}
+
+
+	.pflMidBoardList a h1{
+		font-size: 1rem;
+	}
+
+	.pflMain right{
+		height: auto;
+	}
+
+	.pflRightPanel{
+		text-align: center;
+		display: block;
+		min-height: 100%;
+	}
+
+	.pflRightPanel label{
+		width: 30%;
+	}
+
+	.pflRightPanel > div{
+		height: 30%;
+		flex-direction: row;
+	}
+}
+
+
+@media only screen and (max-height: 200px){
+	.pflMain left header, .pflMain left footer{
+		display: none;
+	}
+
+	.pflMain left main{
+		height: 100%;
+	}
+
+	.pflRightPanel{
+		display: block;
+		height: auto;
+		overflow: auto;
+	}
+
+	.pflRightPanel > div{
+		height: 100px;
+	}
 }

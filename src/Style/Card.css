@@ -4,9 +4,9 @@
 }
 
 .cardMain{
-	min-width:20%;
-	height:10%;
-	margin:1%;
+	width:99%;
+	min-height:10%;
+	margin:1% auto;
 	border-radius: 10px;
 	position: relative;
 	display: flex;

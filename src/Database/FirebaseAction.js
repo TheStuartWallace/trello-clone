@@ -44,7 +44,7 @@ class FirebaseAction{
 	}
 
 	static async userSignIn(email, password){
-		await firebase.auth().signInWithEmailAndPassword(email,password).then(data=>{
+		return await firebase.auth().signInWithEmailAndPassword(email,password).then(data=>{
 			return data.user.uid;
 		}).catch(error=>{return error});
 	}
@@ -100,6 +100,19 @@ class FirebaseAction{
 		}).catch((error)=>{
 			return error;
 		})
+	}
+
+	static async uploadProfilePicture(uid,file){
+		const ref = firebase.storage().ref();
+		const meta = {contentType : file.type};
+		const name = uid+"."+(file.name.split(".")[file.name.split(".").length-1]);
+		const task = ref.child(name).put(file,meta);
+		
+		return await task.then(data=>{
+			return data;
+		}).catch((error)=>{
+			return error;
+		});
 	}
 }
 

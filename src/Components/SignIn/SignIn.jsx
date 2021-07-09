@@ -15,26 +15,30 @@ export default class SignIn extends React.Component{
 			password : "",
 		};
 
-		window.document.title = "Login | Trello-Clone";
+		window.document.title = (this.props.mode ? "Login | Trello-Clone" : "Create Account | Trello-Clone");
 	}
 
 	handleChange(event){
 		this.setState({[event.target.name] : event.target.value});
 	}
 
-	async handleSubmit(){
+	async handleSubmit(){	
 		let action;
 
 		if(this.props.mode){
-			action = await FirebaseAction.userSignIn(this.state.username,this.state.password);
+			action = await FirebaseAction.userSignIn(this.state.username,this.state.password).then(data=>{
+				if(!data.code){
+					this.setState({redirect : "/u/"+data});
+				}else{
+					this.setState({error : data});
+				}
+			});
 		}else{
-			action = await FirebaseAction.userSignUp(this.state.username,this.state.password);
-		}
-
-		if(action){
-			this.setState({redirect : "/u/"+action});
-		}else{
-			this.setState({error : "Error Signing in"});
+			action = await FirebaseAction.userSignUp(this.state.username,this.state.password).then(data=>{
+				this.setState({redirect : "/u/"+action});
+			}).catch(error=>{
+				this.setState({error : error});
+			});
 		}
 	}
 
@@ -48,6 +52,7 @@ export default class SignIn extends React.Component{
 					<header>
 						<h1>Trello Clone</h1>
 						<h2>{this.props.mode ? "Log into your account" : "Create new account"}</h2>
+						<h3>{(this.state.error ? (this.state.error.message) : "")}</h3>
 					</header>
 					
 					<main>

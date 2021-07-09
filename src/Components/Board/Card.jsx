@@ -140,6 +140,7 @@ class Card extends React.Component{
 				<ContentEditable 	className="cardTitle" 
 									onChange={(e)=>this.changeTitle(e.target.value)}
 									html={this.props.data.title}
+									tagName="span"
 
 				/>
 				{	

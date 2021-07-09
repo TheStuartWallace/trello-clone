@@ -16,6 +16,8 @@
 }
 
 .mnpWrapper header{
+	width: 100%;
+	text-align: center;
 	height: 15%;
 	font-size: 5rem;
 	font-weight: bolder;
@@ -24,12 +26,14 @@
 }
 
 .mnpWrapper main{
-	width: 85%;
+	width: 75%;
 	height: 80%;
+	text-align: center;
 	font-size: 1.2rem;
 }
 
 .mnpWrapper footer{
+	text-align: center;
 	height: 10%;
 }
 
@@ -37,7 +41,7 @@
 	position: absolute;
 	top: 5px;
 	right: 5px;
-	width: 20%;
+	width: 40%;
 	height: 25%;
 	display: flex;
 	justify-content: center;
@@ -61,8 +65,8 @@
 	background: #404040;
 }
 
-.mnpWrapper main div{
-	width: 60%;
+.mnpWrapper main span{
+	width: 100%;
 	min-height: 5%;
 	margin: 1% auto;
 	display: flex;
@@ -71,14 +75,14 @@
 	flex-direction: row;
 }
 
-.mnpWrapper main div input{
+.mnpWrapper main span input{
 	width: 65%;
 	height: 100%;
 	font-size: 1.2rem;
 	font-weight: bold;
 }
 
-.mnpWrapper main div button{
+.mnpWrapper main span button{
 	width: 30%;
 	height: 100%;
 	margin: 0px 1%;
@@ -90,12 +94,12 @@
 	font-weight: bold;
 }
 
-.mnpWrapper main div button:hover{
+.mnpWrapper main span button:hover{
 	background: #404040;
 }
 
 
-.mnpWrapper main div span{
+.mnpWrapper main span span{
 	font-size: 2rem;
 }
 
@@ -106,5 +110,84 @@
 
 	.mnpWrapper, .mnpWrapper header, .mnpWrapper main, .mnpWrapper footer{
 		color: white;
+	}
+}
+
+@media only screen and (max-width: 450px) {
+
+	.mnpWrapper header{
+		padding-top: 5%;
+		font-size: 3rem;
+	}
+
+	.mnpSignIn{
+		width: 94%;
+	}
+
+	.mnpWrapper main{
+		width: 100%;
+	}
+
+	.mnpWrapper main span span{
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
+
+	.mnpWrapper main span{
+		font-size: 0.8rem;
+	}
+
+	.mnpWrapper main span input{
+		display: none;
+	}
+
+
+	.mnpWrapper main span button{
+		width: 90%;
+	}
+
+	.mnpWrapper footer{
+		font-size: 0.6rem;
+		height: 10%;
+	}
+}
+
+
+@media only screen and (max-width: 250px) {
+	.mnpWrapper header{
+		font-size: 2rem;
+	}
+
+	.mnpWrapper main span span{
+		font-size: 1rem;
+		font-weight: bold;
+	}
+}
+
+@media only screen and (max-height: 450px) {
+	.mnpWrapper header{
+		height: 30%;
+	}
+
+	.mnpWrapper main span span{
+		font-size: 0.8rem;
+	}
+
+	.mnpWrapper main span{
+		width: 90%;
+		font-size: 0.8rem;
+	}
+
+
+	.mnpWrapper main span input{
+		width: 90%;
+	}
+
+	.mnpWrapper main{
+		height: 55%;
+	}
+
+	.mnpWrapper footer{
+		height: 10%;
 	}
 }

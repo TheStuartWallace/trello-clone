@@ -1,8 +1,10 @@
 import React from 'react';
 import 'Style/MainPage.css';
 import {Redirect} from 'react-router-dom';
+import {AuthContext} from 'Components/Auth/AuthProvider';
 
 export default class MainPage extends React.Component{
+	static contextType = AuthContext;
 	constructor(props){
 		super(props);
 		this.state = {};
@@ -11,6 +13,41 @@ export default class MainPage extends React.Component{
 
 	render(){
 		if(this.state.redirect) return <Redirect to={this.state.redirect}/>
+
+		if(this.context.currentUser){
+			return (
+				<div className="mnpWrapper">
+				<header>
+					Trello Clone
+
+					<div className="mnpSignIn">
+						<button onClick={()=>this.setState({redirect : "/u/"+this.context.currentUser.uid})}>My Profile</button>
+						<button onClick={()=>this.setState({redirect : "/logout"})}>Sign out</button>
+					</div>
+				</header>
+
+				<main>
+					<span>
+						Hey, Welcome back
+					</span>
+					
+
+					<span>
+						You're signed in, so you can view your boards and get to work on your current project
+					</span>
+
+					<span>
+						
+					</span>
+				</main>
+
+				<footer>
+					<span>This is a trello clone, purely made to show off my ReactJS and Javascript knowledge</span>
+					<span>Feedback and Suggestions would be appreciated</span>
+				</footer>
+			</div>
+			); 
+		}
 
 		return (
 			<div className="mnpWrapper">
@@ -24,18 +61,18 @@ export default class MainPage extends React.Component{
 				</header>
 
 				<main>
-					<div>
-						<span>You can sign up today, create a board and organise your thoughts</span>
-					</div>
+					<span>
+						You can sign up today, create a board and organise your thoughts
+					</span>
 
-					<div>
+					<span>
 						<input type="text" placeholder="Enter your email"/>
 						<button>Create new account</button>
-					</div>
+					</span>
 
-					<div>
+					<span>
 						Trello-Clone is a web based list making app, allowing you or a team to organise your thoughs, tasks and plan ahead
-					</div>
+					</span>
 				</main>
 
 				<footer>

@@ -136,22 +136,17 @@ class Board extends React.Component{
 	render(){
 		return (
 			<div className="brdMain">
-				<div className="brdTaskbar">
-					<div className="brdTaskbarItem">
-						<span id="brdBackText">&lt;&lt; Back</span>
-					</div>
+				<nav>
+					<div pos="left">&lt;&lt; Back</div>
 
-					<div className="brdTaskbarItem">
-						<ContentEditable 	id="brdTitle" 
-											html={this.state.title}
+					<div pos="middle">
+						<ContentEditable 	id="brdTitle" html={this.state.title}
 											onChange={(e)=>this.columnCallback("boardTitle",0,e.target.value)}
 											tagName="span"/>
 					</div>
 
-					<div className="brdTaskbarItem" onClick={()=>this.setState({addColumn : true})}>
-						Add Column
-					</div>
-				</div>
+					<div pos="right" onClick={()=>this.setState({addColumn : true})}>Add Column</div>
+				</nav>
 
 				<div className="brdCardHolder" style={{"background":this.state.boardBackground}}>
 					{

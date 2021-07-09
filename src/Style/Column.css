@@ -24,3 +24,17 @@
 	justify-content: center;
 	align-items: center;
 }
+
+
+@media only screen and (max-width: 600px){
+	.clmWrapper{
+		width: 50%;
+	}
+}
+
+
+@media only screen and (max-width: 350px){
+	.clmWrapper{
+		width: 100%;
+	}
+}
