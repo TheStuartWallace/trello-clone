@@ -3,7 +3,9 @@ import 'Style/Board.css';
 import Column from 'Components/Board/Column';
 import FirebaseAction from 'Database/FirebaseAction';
 import {AuthContext} from 'Components/Auth/AuthProvider';
+import {Redirect} from 'react-router-dom';
 import ContentEditable from 'react-contenteditable'
+import PopupBoardSettings from 'Components/Popup/PopupBoardSettings';
 
 class Board extends React.Component{
 	static contextType = AuthContext;
@@ -18,6 +20,8 @@ class Board extends React.Component{
 			newColumnName :  "",
 			status : 0,
 			error : false,
+
+			showSettings : false,
 		};
 	}
 
@@ -131,9 +135,34 @@ class Board extends React.Component{
 		}
 	}
 
+	deleteBoard(){
+		if(window.confirm("Deleting your board cannot be undone! Are you sure?")){
+			FirebaseAction.deleteBoard(this.context.currentUser.uid,this.state.id).then(data=>{
+				this.setState({redirect : "/u/"+this.context.currentUser.uid});
+			});
+		}
+	}
+
+	updateBoard(e){
+		FirebaseAction.updateBoardInfo(this.context.currentUser.uid,this.state.id,
+			{	
+				title : (e.title ? e.title : this.state.title), 
+				boardBackground : (e.boardBackground ? e.boardBackground : this.state.boardBackground), 
+				cardBackground : (e.cardBackground ? e.cardBackground : this.state.cardBackground)
+			}
+		).then(data=>{
+			this.setState({title : (e.title ? e.title : this.state.title), boardBackground : (e.boardBackground ? e.boardBackground : this.state.boardBackground), cardBackground : (e.cardBackground ? e.cardBackground : this.state.cardBackground)});
+		}).catch(error=>{
+			console.error(error);
+		})
+	}
 
 
 	render(){
+		if(this.state.redirect){
+			return <Redirect to={this.state.redirect} />;
+		}
+
 		return (
 			<div className="brdMain">
 				<nav>
@@ -145,7 +174,16 @@ class Board extends React.Component{
 											tagName="span"/>
 					</div>
 
-					<div pos="right" onClick={()=>this.setState({addColumn : true})}>Add Column</div>
+					<div pos="right">
+						<button onClick={()=>this.setState({addColumn : true})}>
+							<span>Add Column</span>
+							<img src="https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/Internal%2FTrelloAddIcon.png?alt=media&token=c9f7997d-73be-47da-9304-dc661221b1da"/>
+						</button>
+						<button onClick={()=>this.setState({showSettings : !this.state.showSettings})}>
+							<span>Board Settings Board</span>
+							<img src="https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/Internal%2FTrelloGearIcon.png?alt=media&token=00d483d0-927c-4b59-ae98-c40fe0b3bb77" />
+						</button>
+					</div>
 				</nav>
 
 				<div className="brdCardHolder" style={{"background":this.state.boardBackground}}>
@@ -162,6 +200,12 @@ class Board extends React.Component{
 
 				{this.renderError()}
 				{this.renderAddColumn()}
+
+				<PopupBoardSettings show={this.state.showSettings} 
+									close={()=>this.setState({showSettings : false})} 
+									update={(e)=>this.updateBoard(e)} 
+									delete={()=>this.deleteBoard()}
+									data={this.state}/>
 			</div>
 		);
 	}

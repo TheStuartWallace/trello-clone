@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import NewBoardPopup from 'Components/Popup/NewBoardPopup';
 
 
-export default class SignIn extends React.Component{
+export default class Profile extends React.Component{
 	static contextType = AuthContext;
 
 	constructor(props){
@@ -17,19 +17,22 @@ export default class SignIn extends React.Component{
 			id : this.props.match.params.id,
 		};
 
-		window.document.title = "Loading...";
 	}
 
 	componentDidMount(){this.getData()}
 	componentDidUpdate(){this.getData()}
 
 	getData(){
-		if(this.state.status > 0) return; 
+		if(this.state.status > 0 || this.state.status === -1) return; 
 
 		if(!this.state.profile){
 			FirebaseAction.getProfile(this.state.id).then((data)=>{
-				this.setState({profile : data, changedData : data, status : (data.private ? 2 : this.state.status )});
-			});
+				if(data === undefined){
+					this.setState({error : {name : "Unknown Profile",message:"Profile not found"}, status : -1});
+					return;
+				}
+				this.setState({profile : data, changedData : data});
+			}).catch(console.error);
 		}
 
 		if(this.context && this.state.mode === undefined){
@@ -40,14 +43,6 @@ export default class SignIn extends React.Component{
 			}
 		}
 
-
-		/*
-			Only get board details when:
-				Boards is not in state
-				User is signed in
-				User signed in is user in ID
-
-		*/
 		if(!this.state.boards && 
 			this.context.userSignedIn &&
 			this.context.currentUser.uid === this.state.id
@@ -86,12 +81,21 @@ export default class SignIn extends React.Component{
 				this.setState({boards : boardData});
 			});
 		}
-
+		if(!!this.state.profile) document.title = this.state.profile.display+"'s Profile | Trello Clone";
+		if((this.context.userSignedIn === true && this.state.mode === true) && this.state.profile && this.state.boards) this.setState({status : 1}); // If the user is signed in, the profile is loaded and this isn't their account
 		if(this.context.userSignedIn !== undefined && this.state.profile && this.state.mode === false) this.setState({status : 2}); // If user isn't signed in and the profile is loaded
-		if(this.context.userSignedIn === true  && this.state.profile && this.state.boards && this.state.mode) this.setState({status : 1}); // If the user is signed in, the profile is loaded and this isn't their account
+
 	}
 
 	handleChange(event){
+		if(event.target.type === "checkbox"){
+			this.setState({
+				changedData : {...this.state.changedData,[event.target.name] : event.target.checked}
+			})
+
+			return;	
+		}
+
 		this.setState({
 			changedData : {...this.state.changedData,[event.target.name] : event.target.value}
 		})
@@ -118,16 +122,23 @@ export default class SignIn extends React.Component{
 	}
 
 	createNewBoard(data){
-		FirebaseAction.createNewBoard(this.context.currentUser.uid,data).then((data)=>{
-			window.open("/b/"+data.id,"_blank");
-			this.setState({renderNewBoard : false});
+		FirebaseAction.createNewBoard(this.context.currentUser.uid,data).then((rdata)=>{
+			window.open("/b/"+rdata.id,"_blank");
+			this.setState({renderNewBoard : false, boards : this.state.boards.concat([{id : rdata.id,...data}])});
 		}).catch(console.error);
 	}
 
 	render(){
 		switch(this.state.status){
 
-			case -1: default: return <div>Error!</div>
+			case -1: default: return (
+				<div id="pupBackingError">
+				<div id="pupWindowSmall">
+					<span className="errorTitle">Sorry about this, but there's been an error.</span>
+					<span className="errorMessage">{this.state.error.name+": "+this.state.error.message}</span>
+				</div>
+			</div>
+			);
 
 			case 0: return <div>Loading</div>
 
@@ -178,8 +189,8 @@ export default class SignIn extends React.Component{
 							<hr/>
 
 							<div>
-								<label htmlFor="setting3">Setting 3</label>
-								<input type="text" id="setting3" name="setting3" value="" onChange={(e)=>this.handleChange(e)}/>
+								<label htmlFor="private">Make {this.state.profile.private ? "public" : "private"}</label>
+								<input type="checkbox" id="private" name="private" value="Make Private" onChange={(e)=>this.handleChange(e)}/>
 							</div>
 
 							<hr/>
@@ -218,11 +229,11 @@ export default class SignIn extends React.Component{
 						</header>
 						<main>
 							{(this.state.profile.private ? 
-								<div>This users profile is private</div>
+								<div className="pflLeftBoardCount">This users profile is private</div>
 								:
-								<div>
-									<div className="pflLeftBoardCount">This user has {this.state.profile.boards} {this.state.profile.boards === 1 ? "board" : "boards" }</div>
-								</div>
+								
+								<div className="pflLeftBoardCount">This user has {this.state.profile.boards} {this.state.profile.boards === 1 ? "board" : "boards" }</div>
+								
 							)}
 						</main>
 						<footer>

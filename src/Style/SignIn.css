@@ -11,7 +11,7 @@
 }
 
 .sinWrapper{
-	background-image: url("https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/whiteBackground.png?alt=media&token=a23b38cd-ee20-4b4e-86d8-2b84aff67fc4");
+	background-image: url("https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/Internal%2FwhiteBackground.png?alt=media&token=6adf362e-565c-492d-bbf2-dbd41cb2e635");
 }
 
 .sinInput{
@@ -74,7 +74,7 @@
 @media (prefers-color-scheme: dark) {
 	.sinWrapper{
 		color: white;
-		background-image: url("https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/blackBackground.png?alt=media&token=86c6bdef-4e0b-45e1-a2e0-26152772eceb");
+		background-image: url("https://firebasestorage.googleapis.com/v0/b/trello-clone-f948b.appspot.com/o/Internal%2FblackBackground.png?alt=media&token=bf16c247-381c-45f4-a35b-e5b8d83181bc");
 	}
 }
 

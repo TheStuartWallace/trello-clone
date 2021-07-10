@@ -1,13 +1,13 @@
 import React from 'react';
-import './PopUp.css';
+import 'Style/PopUp.css';
 
-class Popup extends React.Component{
+export default class BasePopup extends React.Component{
 
-	constructor(props){
+	constructor(props, small){
 		super(props);
 
 		this.state = {
-
+			small : small,
 		};
 	}
 
@@ -16,12 +16,16 @@ class Popup extends React.Component{
 	}
 
 	render(){
+		if(!this.props.show) return (<div></div>)
+
+		return (
+
 		<div id="pupBacking">
-			<div id="pupWindow">
+			<div id={this.state.small ? "pupWindowSmall" : "pupWindow"}>
+				<div className="clmRemove" onClick={()=>{this.props.close();}}>x</div>
 				{this.renderPopup()}
 			</div>
 		</div>
+		);
 	}
 }
-
-export default Popup;

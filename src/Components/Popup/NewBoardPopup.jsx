@@ -8,16 +8,11 @@ export default class NewBoardPopup extends React.Component{
 			boardTitle : "Untitled Board", 
 			boardBackground : "#FFFFFF",
 			boardCardBackground : "#FFFFFF",
-			open : false,
 		}
 	}
 
-	static getDerivedStateFromProps(props, state){
-		return {open : props.open};
-	}
-
 	render(){
-		if(!this.state.open) return (<div></div>);
+		if(!this.props.open) return (<div></div>);
 
 		return (
 			<div id="pupBacking">
@@ -39,14 +34,12 @@ export default class NewBoardPopup extends React.Component{
 							<input type="color" id="boardCardBackground" onChange={(e)=>this.setState({boardCardBackground : e.target.value})} value={this.state.boardCardBackground}/>
 						</div>
 
-						<button onClick={()=>this.props.create({	title : this.state.boardTitle, 
-																	boardBackground : this.state.boardBackground,
-																	cardBackground : this.state.boardCardBackground,
-																})}>Create new board</button>
+						<button onClick={()=>{
+							this.props.create({title : this.state.boardTitle,boardBackground : this.state.boardBackground,cardBackground : this.state.boardCardBackground,});
+							this.props.close();
+						}}>Create new board</button>
 				</div>
 			</div>
 		);
 	}
 }
-
-//{"title":"Board Title","boardBackground":"#89acb3","cardBackground":"#87dced"}

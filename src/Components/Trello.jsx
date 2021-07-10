@@ -7,8 +7,9 @@ import MainPage from "Components/Main/MainPage";
 import Board from "Components/Board/Board";
 import SignIn from "Components/SignIn/SignIn";
 import Profile from "Components/Profile/Profile";
+import NotFound from "Components/Main/NotFound";
 
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 class Trello extends React.Component{
 
@@ -21,11 +22,14 @@ class Trello extends React.Component{
 		return (
 			<AuthProvider>
 				<Router>
-					<Route path="/" exact component={MainPage} />
-					<Route path="/b/:id" exact component={Board} />
-					<Route path="/u/:id" exact component={Profile} />
-					<Route path="/signin" exact render={(props) =><SignIn {...props} mode={true}/>} />
-					<Route path="/signup" exact render={(props) =><SignIn {...props} mode={false}/>} />
+					 <Switch>
+						<Route path="/b/:id" exact component={Board} />
+						<Route path="/u/:id" exact component={Profile} />
+						<Route path="/signin" exact render={(props) =><SignIn {...props} mode={true}/>} />
+						<Route path="/signup" exact render={(props) =><SignIn {...props} mode={false}/>} />
+						<Route path="/" exact component={MainPage} />
+						<Route component={NotFound} />
+					</Switch>
 				</Router>
 			</AuthProvider>
 		);	

@@ -195,6 +195,55 @@
 	bottom: 5px
 }
 
+#pupWindowSmall div[name="BoardSettings"]{
+	width: 90%;
+}
+
+#pupWindowSmall div[name="BoardSettings"] div{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 90%;
+	height: 15%;
+	margin: 1% auto;
+}
+
+#pupWindowSmall div[name="BoardSettings"] button{
+	width: 90%;
+	border:  0px;
+	border-radius: 4px;
+	height: 100%;
+	background: black;
+	color: white;
+	font-weight: bolder;
+	margin-top: 4%;
+}
+
+#pupWindowSmall div[name="BoardSettings"] div button[name="delete"]{
+	width: 90%;
+	border:  0px;
+	border-radius: 4px;
+	height: 90%;
+	background: red;
+	color: white;
+	font-weight: bold;
+	margin-top: 4%;
+	transition: background 1s, width 1s, height 1s, font-weight 1s;
+}
+
+
+
+#pupWindowSmall div[name="BoardSettings"] div button[name="delete"]:hover{
+	background: darkred;
+	width: 95%;
+	height: 100%;
+	font-weight: bolder;
+}
+
+#pupWindowSmall div[name="BoardSettings"] input,#pupWindowSmall div[name="BoardSettings"] label{
+	width: 49%;
+}
+
 
 @media only screen and (max-width: 800px) {
 

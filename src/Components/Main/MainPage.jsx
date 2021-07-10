@@ -27,9 +27,9 @@ export default class MainPage extends React.Component{
 				</header>
 
 				<main>
-					<span>
+					<h1>
 						Hey, Welcome back
-					</span>
+					</h1>
 					
 
 					<span>
@@ -61,17 +61,17 @@ export default class MainPage extends React.Component{
 				</header>
 
 				<main>
-					<span>
-						You can sign up today, create a board and organise your thoughts
-					</span>
-
+					<h1>
+						Sign up today
+					</h1>
+					
 					<span>
 						<input type="text" placeholder="Enter your email"/>
 						<button>Create new account</button>
 					</span>
 
 					<span>
-						Trello-Clone is a web based list making app, allowing you or a team to organise your thoughs, tasks and plan ahead
+						Trello-Clone is a web based list making app, allowing you or a team to organise your thoughs, tasks and plan ahead, so sign up today and get started
 					</span>
 				</main>
 

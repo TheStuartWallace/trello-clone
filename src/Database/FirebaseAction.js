@@ -2,6 +2,7 @@ import firebase from 'Database/Firebase';
 import { v4 as uuidv4 } from "uuid";
 
 class FirebaseAction{
+
 	static async getBoard(uid,id){
 		let data = await firebase.firestore().collection(uid).doc(id).get();
 		return data.data();
@@ -76,6 +77,11 @@ class FirebaseAction{
 		};
 
 		let fbaction = await firebase.firestore().collection(uid).add(board);
+		let increment = firebase.firestore.FieldValue.increment(1);
+
+		let countBoard = await firebase.firestore().collection(uid).doc("data").update({
+			boards : increment,
+		});
 		return fbaction;
 	}
 
@@ -113,6 +119,18 @@ class FirebaseAction{
 		}).catch((error)=>{
 			return error;
 		});
+	}
+
+	static async deleteBoard(uid,id){
+		return await firebase.firestore().collection(uid).doc(id).delete().then(data=>{
+			let increment = firebase.firestore.FieldValue.increment(-1);
+
+			let countBoard = firebase.firestore().collection(uid).doc("data").update({
+				boards : increment,
+			});
+
+			return data;
+		}).catch(console.error);
 	}
 }
 
