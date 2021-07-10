@@ -9,7 +9,7 @@ import SignIn from "Components/SignIn/SignIn";
 import Profile from "Components/Profile/Profile";
 import NotFound from "Components/Main/NotFound";
 
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {HashRouter as Router, Route, Switch} from 'react-router-dom';
 
 class Trello extends React.Component{
 
@@ -21,7 +21,7 @@ class Trello extends React.Component{
 	render(){
 		return (
 			<AuthProvider>
-				<Router>
+				<Router basename={`/${process.env.PUBLIC_URL}`}>
 					 <Switch>
 						<Route path="/b/:id" exact component={Board} />
 						<Route path="/u/:id" exact component={Profile} />
