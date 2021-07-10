@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/Trello_Clone/static/css/main.4484a754.chunk.css",
+    "main.js": "/Trello_Clone/static/js/main.39ede780.chunk.js",
+    "main.js.map": "/Trello_Clone/static/js/main.39ede780.chunk.js.map",
+    "runtime-main.js": "/Trello_Clone/static/js/runtime-main.2c07980f.js",
+    "runtime-main.js.map": "/Trello_Clone/static/js/runtime-main.2c07980f.js.map",
+    "static/js/2.c53b7087.chunk.js": "/Trello_Clone/static/js/2.c53b7087.chunk.js",
+    "static/js/2.c53b7087.chunk.js.map": "/Trello_Clone/static/js/2.c53b7087.chunk.js.map",
+    "index.html": "/Trello_Clone/index.html",
+    "static/css/main.4484a754.chunk.css.map": "/Trello_Clone/static/css/main.4484a754.chunk.css.map",
+    "static/js/2.c53b7087.chunk.js.LICENSE.txt": "/Trello_Clone/static/js/2.c53b7087.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2c07980f.js",
+    "static/js/2.c53b7087.chunk.js",
+    "static/css/main.4484a754.chunk.css",
+    "static/js/main.39ede780.chunk.js"
+  ]
+}
