@@ -166,7 +166,7 @@ class Board extends React.Component{
 		return (
 			<div className="brdMain">
 				<nav>
-					<div pos="left">&lt;&lt; Back</div>
+					<div pos="left" onClick={(e)=>this.setState({redirect : "/u/"+this.context.currentUser.uid})}>&lt;&lt; Profile</div>
 
 					<div pos="middle">
 						<ContentEditable 	id="brdTitle" html={this.state.title}
